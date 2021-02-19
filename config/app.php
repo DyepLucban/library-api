@@ -176,6 +176,12 @@ return [
         App\Providers\RepositoriesServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Repository Providers
+        App\Providers\Repositories\AuthRepositoryProvider::class,
+        App\Providers\Repositories\UserRepositoryProvider::class,
+        App\Providers\Repositories\BookRepositoryProvider::class,
+        App\Providers\Repositories\LoanRepositoryProvider::class,
+        App\Providers\Repositories\SettingRepositoryProvider::class,
     ],
 
     /*

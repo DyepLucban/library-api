@@ -2,26 +2,27 @@
 
 namespace App\Repositories;
 
-use App\User;
-use App\Repositories\Interfaces\AuthRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class AuthRepository implements AuthRepositoryInterface
+class AuthRepository
 {
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
 
     public function login($request)
     {
         try {
 
-            $user = User::where('email', $request['email'])->first();
+            $user = $this->user->where('email', $request['email'])->first();
 
             if (!$user || !Hash::check($request['password'], $user->password))
             {
-                return response()->json(['message' => 'Invalid Credentials'], 401);
+                return response()->json(['message' => 'User does not exist!'], 401);
             }
-
             
             $token = $user->createToken($request['device_name'])->plainTextToken;
 
@@ -30,7 +31,6 @@ class AuthRepository implements AuthRepositoryInterface
         } catch (\Exception $e) {
             return $e->getMessage();
         }
-
     }
 
     public function getAuthUser()
@@ -45,6 +45,4 @@ class AuthRepository implements AuthRepositoryInterface
             return $e->getMessage();
         }    
     }
-
-
 }

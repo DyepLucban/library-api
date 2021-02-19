@@ -2,17 +2,19 @@
 
 namespace App\Repositories;
 
-use App\Setting;
-use App\Repositories\Interfaces\SettingRepositoryInterface;
-
-class SettingRepository implements SettingRepositoryInterface
+class SettingRepository 
 {
+
+    public function __construct($setting)
+    {
+        $this->setting = $setting;
+    }
 
     public function browse()
     {
         try {
 
-            $setting = Setting::all();
+            $setting = $this->setting->all();
             return $setting;
             return response()->json($setting, 200);
 
@@ -40,7 +42,7 @@ class SettingRepository implements SettingRepositoryInterface
     {
         try {
 
-            $data = Setting::where('id', $id)->first();
+            $data = $this->setting->where('id', $id)->first();
 
             $data->loan_days = $request['loan_days'];
             $data->color_name = $request['color_name'];
@@ -57,21 +59,6 @@ class SettingRepository implements SettingRepositoryInterface
 
     public function delete($id)
     {
-        // try {
-
-        //     $book = Book::where('id', $id)->first();
-        
-        //     if ($book) {
-
-        //         $book->delete();
-
-        //         return response()->json(['message' => 'Book Successfully Deleted!'], 200);
-        //     }
-
-        //     return response()->json(['message' => 'Book Not Found!'], 404);
-
-        // } catch (\Exception $e) {
-        //     return $e->getMessage();
-        // }
+        //
     }
 }

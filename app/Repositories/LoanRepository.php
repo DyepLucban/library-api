@@ -2,14 +2,17 @@
 
 namespace App\Repositories;
 
-use App\Book;
-use App\Loan;
-use App\User;
-use App\Repositories\Interfaces\LoanRepositoryInterface;
+use App\Models\Book;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class LoanRepository implements LoanRepositoryInterface
+class LoanRepository
 {
+
+    public function __construct($loan)
+    {
+        $this->loan = $loan;
+    }
 
     public function browse()
     {
@@ -20,13 +23,13 @@ class LoanRepository implements LoanRepositoryInterface
 
             if ($user->role_id == 1) {
 
-                $loans = Loan::with('user', 'book')->get();
+                $loans = $this->loan->with('user', 'book')->get()->toArray();
 
                 return response()->json($loans);
 
             } else {
                 
-                $loans = Loan::where('user_id', $user->id)->with('user', 'book')->get();
+                $loans = $this->loan->where('user_id', $user->id)->with('user', 'book')->get();
 
                 return response()->json($loans);
             }
@@ -46,10 +49,9 @@ class LoanRepository implements LoanRepositoryInterface
     {
         try {
 
-
             if ($request['auth_role'] == 1)
             {
-                $loans = Loan::where('user_id', $request['student_id'])->get();
+                $loans = $this->loan->where('user_id', $request['student_id'])->get();
 
                 if ($loans) {
                     foreach ($loans as $value) {
@@ -59,7 +61,7 @@ class LoanRepository implements LoanRepositoryInterface
                     }
                 }
             } else {
-                $loans = Loan::where('user_id', $request['auth_user_id'])->get();
+                $loans = $this->loan->where('user_id', $request['auth_user_id'])->get();
 
                 if ($loans) {
                     foreach ($loans as $value) {
@@ -76,7 +78,7 @@ class LoanRepository implements LoanRepositoryInterface
             }
 
 
-            Loan::create([
+            $this->loan->create([
                 'book_id' => $request['book_id'],
                 'user_id' => ($request['auth_role'] == 1) ? $request['student_id'] : $request['auth_user_id'],
                 'issue_date' => $request['start_date'],
@@ -102,7 +104,7 @@ class LoanRepository implements LoanRepositoryInterface
 
             if ($request['update_type'] == "1") {
 
-                $loan = Loan::where('id', $id)->first();
+                $loan = $this->loan->where('id', $id)->first();
 
                 if ($loan) {
 
@@ -121,7 +123,7 @@ class LoanRepository implements LoanRepositoryInterface
 
             } else {
 
-                $loan = Loan::where('id', $id)->first();
+                $loan = $this->loan->where('id', $id)->first();
 
                 if ($loan) {
 
@@ -155,21 +157,6 @@ class LoanRepository implements LoanRepositoryInterface
 
     public function delete($id)
     {
-        // try {
-
-        //     $book = Book::where('id', $id)->first();
-        
-        //     if ($book) {
-
-        //         $book->delete();
-
-        //         return response()->json(['message' => 'Book Successfully Deleted!'], 200);
-        //     }
-
-        //     return response()->json(['message' => 'Book Not Found!'], 404);
-
-        // } catch (\Exception $e) {
-        //     return $e->getMessage();
-        // }
+        //
     }
 }
