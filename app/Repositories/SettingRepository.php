@@ -26,16 +26,12 @@ class SettingRepository
 
     public function read($id)
     {
-
+        //
     }
 
     public function add($request)
     {
-        try {
-
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
+        //
     }
 
     public function edit($id, $request)

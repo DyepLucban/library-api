@@ -3,7 +3,9 @@
 namespace App\Providers\Repositories;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\BookRepository;
 use App\Repositories\LoanRepository;
+use App\Repositories\UserRepository;
 use App\Models\Loan;
 
 class LoanRepositoryProvider extends ServiceProvider
@@ -16,7 +18,11 @@ class LoanRepositoryProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(LoanRepository::class, function() {
-            return new LoanRepository(new Loan);
+            return new LoanRepository(
+               new Loan,
+               $this->app->make(UserRepository::class),
+               $this->app->make(BookRepository::class)
+            );
         });
     }
 

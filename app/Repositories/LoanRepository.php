@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Auth;
 class LoanRepository
 {
 
-    public function __construct($loan)
+    public function __construct($loan, $userRepository, $bookRepository)
     {
         $this->loan = $loan;
+        $this->userRepository = $userRepository;
+        $this->bookRepository = $bookRepository;
     }
 
     public function browse()
@@ -19,8 +21,8 @@ class LoanRepository
         try {
 
             $id = Auth::id();
-            $user = User::where('id', $id)->first();
-
+            $user = $this->userRepository->read($id);
+            
             if ($user->role_id == 1) {
 
                 $loans = $this->loan->with('user', 'book')->get()->toArray();
@@ -87,7 +89,7 @@ class LoanRepository
                 'status' => ($request['auth_role'] == 1) ? 1 : 2,
             ]);
 
-            $book = Book::where('id', $request['book_id'])->first();
+            $book = $this->bookRepository->read($request['book_id']);
             $book->in_stocks = ($request['auth_role'] == 1) ? $book->in_stocks - 1 : $book->in_stocks;
             $book->save();
             
@@ -112,7 +114,7 @@ class LoanRepository
                     $loan->status = 4;
                     $loan->save();
 
-                    $book = Book::where('id', $request['book_id'])->first();
+                    $book = $this->bookRepository->read($request['book_id']);
                     $book->in_stocks = $book->in_stocks + 1;
                     $book->save();
 
@@ -129,7 +131,7 @@ class LoanRepository
 
                     if ($request['status'] == 1) {
 
-                        $book = Book::where('id', $request['book_id'])->first();
+                        $book = $this->bookRepository->read($request['book_id']);
                         $book->in_stocks = $book->in_stocks - 1;
                         $book->save();
 
