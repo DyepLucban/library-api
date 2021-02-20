@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Interfaces\LoanRepositoryInterface;
+use App\Repositories\LoanRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -11,7 +11,7 @@ class LoanController extends Controller
 {
     private $loanRepository;
 
-    public function __construct(LoanRepositoryInterface $loanRepository)
+    public function __construct(LoanRepository $loanRepository)
     {
         $this->loanRepository = $loanRepository;
     }

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Repositories\BookRepository;
 
 class BookController extends Controller
 {
     private $bookRepository;
 
-    public function __construct(BookRepositoryInterface $bookRepository)
+    public function __construct(BookRepository $bookRepository)
     {
         $this->bookRepository = $bookRepository;
     }

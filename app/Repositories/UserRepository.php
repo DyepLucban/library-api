@@ -2,18 +2,21 @@
 
 namespace App\Repositories;
 
-use App\User;
-use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository
 {
+
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
 
     public function browse()
     {
         try {
 
-            $users = User::with('role')->get();
+            $users = $this->user->with('role')->get();
 
             return response()->json($users);
 
@@ -25,14 +28,22 @@ class UserRepository implements UserRepositoryInterface
 
     public function read($id)
     {
+        try {
+            
+            $user = $this->user->find($id);
+            
+            return $user;
 
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function add($request)
     {
         try {
 
-            User::create([
+            $this->user->create([
                 'first_name' => $request['first_name'],
                 'last_name' => $request['last_name'],
                 'email' => $request['email'],
@@ -51,7 +62,7 @@ class UserRepository implements UserRepositoryInterface
     {
         try {
 
-            $user = User::where('id', $id)->first();
+            $user = $this->user->where('id', $id)->first();
 
             if ($user) {
 
@@ -74,7 +85,7 @@ class UserRepository implements UserRepositoryInterface
     {
         try {
 
-            $user = User::where('id', $id)->first();
+            $user = $this->user->where('id', $id)->first();
 
             if ($user) {
 

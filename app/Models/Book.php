@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +17,6 @@ class Book extends Model
 
     public function loan()
     {
-        return $this->hasMany('App\Loan');
+        return $this->hasMany('App\Models\Loan');
     }    
 }

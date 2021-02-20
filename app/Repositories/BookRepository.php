@@ -2,17 +2,19 @@
 
 namespace App\Repositories;
 
-use App\Book;
-use App\Repositories\Interfaces\BookRepositoryInterface;
-
-class BookRepository implements BookRepositoryInterface
+class BookRepository
 {
+
+    public function __construct($book)
+    {
+        $this->book = $book;
+    }
 
     public function browse()
     {
         try {
 
-            $books = Book::all();
+            $books = $this->book->all();
 
             return response()->json($books);
 
@@ -24,14 +26,18 @@ class BookRepository implements BookRepositoryInterface
 
     public function read($id)
     {
-
+        try {
+            return $this->book->find($id);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function add($request)
     {
         try {
 
-            Book::create([
+            $this->book->create([
                 'name' => $request['book_name'],
                 'category' => $request['category'],
                 'author' => $request['author'],
@@ -51,7 +57,7 @@ class BookRepository implements BookRepositoryInterface
     {
         try {
 
-            $book = Book::where('id', $id)->first();
+            $book = $this->book->where('id', $id)->first();
 
             if ($book) {
 
@@ -77,7 +83,7 @@ class BookRepository implements BookRepositoryInterface
     {
         try {
 
-            $book = Book::where('id', $id)->first();
+            $book = $this->book->where('id', $id)->first();
         
             if ($book) {
 
@@ -97,7 +103,7 @@ class BookRepository implements BookRepositoryInterface
     {
         try {
             
-            $book = Book::where('id', $id)->first();
+            $book = $this->book->where('id', $id)->first();
 
             if ($book) 
             {
