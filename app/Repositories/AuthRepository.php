@@ -21,7 +21,7 @@ class AuthRepository
 
             if (!$user || !Hash::check($request['password'], $user->password))
             {
-                return response()->json(['message' => 'User does not exist!'], 401);
+                return response()->json(['message' => 'you have entered an invalid email or password'], 401);
             }
             
             $token = $user->createToken($request['device_name'])->plainTextToken;
